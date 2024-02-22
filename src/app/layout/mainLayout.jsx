@@ -48,9 +48,9 @@ export function MainLayout({ children }) {
         </div>
       </ResizablePanel>
       {/* <ResizableHandle withHandle /> */}
-      <ResizablePanel defaultSize={80}>
+      <ResizablePanel defaultSize={80} style={{ overflow: 'scroll' }}>
         <div
-          className='mx-auto  p-6'
+          className='mx-auto  p-6 '
           // style={{ background: 'red' }}
         >
           {children}
