@@ -1,73 +1,123 @@
 'use client'
-import React from 'react'
-
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { z } from 'zod'
 
 export default function page() {
   return (
-    <div>
-      <ProfileForm />
+    <div className=''>
+      <MyForm />
     </div>
   )
 }
 
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: 'Username must be at least 2 characters.'
+// Define the Zod schema for validation
+const schema = z.object({
+  fullName: z.string().refine((data) => data.trim().length > 0, {
+    message: 'Full Name is required'
+  }),
+  email: z
+    .string()
+    .email('Invalid email format')
+    .refine((data) => data.trim().length > 0, { message: 'Email is required' }),
+  phoneNumber: z.string().refine((data) => /^\d{11}$/.test(data), {
+    message: 'Phone Number must be 11 digits with no text'
+  }),
+  address: z.string().refine((data) => data.trim().length > 0, {
+    message: 'Address is required'
+  }),
+  fundSource: z.string().refine((data) => data.trim().length > 0, {
+    message: 'Source of fund is required'
   })
 })
 
-export function ProfileForm() {
-  // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: ''
+type FormData = z.infer<typeof schema>
+
+const MyForm: React.FC = () => {
+  type FormField = {
+    name: 'fullName' | 'email' | 'phoneNumber' | 'address' | 'fundSource'
+    label: string
+    type: 'text' | 'email' | 'tel'
+    placeholder: string
+  }
+
+  const formField: FormField[] = [
+    {
+      name: 'fullName',
+      label: 'Full Name',
+      type: 'text',
+      placeholder: 'write name'
+    },
+    {
+      label: 'Email',
+      type: 'email',
+      name: 'email',
+      placeholder: 'write email'
+    },
+    {
+      name: 'phoneNumber',
+      label: 'Phone Number',
+      type: 'tel',
+      placeholder: 'enter phone number'
+    },
+    {
+      name: 'address',
+      label: 'Address',
+      type: 'text',
+      placeholder: 'write address'
+    },
+    {
+      name: 'fundSource',
+      label: 'Source of Funds',
+      type: 'text',
+      placeholder: 'write about Source of fund'
     }
+  ]
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<FormData>({
+    resolver: zodResolver(schema)
   })
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    console.log(data)
+    // Add your form submission logic here
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-        <FormField
-          control={form.control}
-          name='username'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder='shadcn' {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
+    <form onSubmit={handleSubmit(onSubmit)} className='w-[100%] mx-auto '>
+      {formField.map((field) => (
+        <div key={field.name} className='mb-4'>
+          <label
+            htmlFor={field.name}
+            className='block text-sm font-medium text-gray-600'>
+            {field.label}
+          </label>
+          {field.type === 'text' ||
+          field.type === 'email' ||
+          field.type === 'tel' ? (
+            <input
+              type={field.type}
+              placeholder={field.placeholder}
+              {...register(field.name)}
+              className='mt-1 p-2 border rounded-md w-full'
+            />
+          ) : null}
+          {errors[field.name] && (
+            <p className='text-red-500 mt-1'>{errors[field.name]?.message}</p>
           )}
-        />
-        <Button type='submit'>Submit</Button>
-      </form>
-    </Form>
+        </div>
+      ))}
+      <Button
+        type='submit'
+        // className='bg-blue-500 text-white px-4 py-2 rounded-md'
+      >
+        Submit
+      </Button>
+    </form>
   )
 }
