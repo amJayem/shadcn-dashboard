@@ -11,36 +11,12 @@ export function MainLayout({ children }) {
     { name: 'Add New Member', route: '/members' },
     { name: 'About', route: '/about' }
   ]
-  // return (
-  //   <div className='bg-green-400'>
-  //     <ResizablePanelGroup
-  //       direction='horizontal'
-  //       className='rounded-lg border min-h-[100vh] p-0 bg-red-300'>
-  //       <ResizablePanel
-  //         // className='bg-[#20A459]'
-  //         defaultSize={11}>
-  //         <div
-  //           className='flex flex-col gap-2 h-full p-5 w-[200px] bg-[#20A459]'
-  //           // style={{ background: '#20A459' }}
-  //         >
-
-  //         </div>
-  //       </ResizablePanel>
-  //       {/* <ResizableHandle withHandle /> */}
-  //       <ResizablePanel defaultSize={88}>
-  //         <div className='flex h-full  justify-center p-6'>
-  //           <span className='font-semibold'>{children}</span>
-  //         </div>
-  //       </ResizablePanel>
-  //     </ResizablePanelGroup>
-  //   </div>
-  // )
 
   return (
     <ResizablePanelGroup
       direction='horizontal'
-      className='max-w-md rounded-lg border'
-      style={{ height: '90vh' }}>
+      className=' rounded-lg border'
+      style={{ height: '90vh', width: '100%' }}>
       <ResizablePanel defaultSize={20}>
         <div
           className='flex flex-col'
@@ -51,7 +27,6 @@ export function MainLayout({ children }) {
           }}>
           {navItem?.map((item) => (
             <Link
-              // className={`${pathname === item?.route ? ' outline' : ''}`}
               key={item?.route}
               style={{
                 background: pathname === item?.route ? '#20A459' : '#FFDE59',
@@ -75,10 +50,10 @@ export function MainLayout({ children }) {
       {/* <ResizableHandle withHandle /> */}
       <ResizablePanel defaultSize={80}>
         <div
-          className='flex h-full justify-center p-6'
+          className='mx-auto  p-6'
           // style={{ background: 'red' }}
         >
-          <span className='font-semibold'>{children}</span>
+          {children}
         </div>
       </ResizablePanel>
     </ResizablePanelGroup>
