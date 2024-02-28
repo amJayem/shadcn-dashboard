@@ -107,7 +107,7 @@ export function CardWithForm() {
               height={0}
               width={100}
               alt={`profile img - ${member?.name}`}
-              className='rounded-[50%]'
+              className='rounded-md'
             />
             <CardDescription className='mt-2'>
               Address: {member?.address}
