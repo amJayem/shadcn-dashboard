@@ -20,14 +20,16 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import axiosInstance from '@/hooks/axiosInstance'
 
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
 interface Member {
-  name: string
-  memberId: number
+  fullName: string
+  _id: number
   email: string
   phoneNumber: string
-  address: string
+  address1: string
   fundSource: string
   image: string
 }
@@ -35,91 +37,107 @@ interface Member {
 export default function Home() {
   return (
     <div>
-      <CardWithForm />
+      <MembersCard />
     </div>
   )
   // <CardWithForm />
 }
 
-export function CardWithForm() {
-  const memberList = [
-    {
-      name: 'Asif Mahmud Jayem',
-      memberId: 1,
-      email: 'abc@gmail.com',
-      phoneNumber: '01759375796',
-      address: 'Syamoli, Dhaka',
-      fundSource: 'Private Job',
-      image:
-        'https://img.freepik.com/free-photo/green-sprouts-dark-soil-against-blurred-background-symbolizing-concept-growth-potential_90220-1462.jpg?t=st=1708622844~exp=1708626444~hmac=9fe25c21cfa7cccb2d83cd0cb7249578a358624934ab919850a623a75e26f853&w=1380'
-    },
-    {
-      name: 'Asif Mahmud Jayem',
-      memberId: 2,
-      email: 'abc@gmail.com',
-      phoneNumber: '01759375796',
-      address: 'Syamoli, Dhaka',
-      fundSource: 'Private Job',
-      image:
-        'https://img.freepik.com/free-photo/green-sprouts-dark-soil-against-blurred-background-symbolizing-concept-growth-potential_90220-1462.jpg?t=st=1708622844~exp=1708626444~hmac=9fe25c21cfa7cccb2d83cd0cb7249578a358624934ab919850a623a75e26f853&w=1380'
-    },
-    {
-      name: 'Asif Mahmud Jayem',
-      memberId: 3,
-      email: 'abc@gmail.com',
-      phoneNumber: '01759375796',
-      address: 'Syamoli, Dhaka',
-      fundSource: 'Private Job',
-      image:
-        'https://img.freepik.com/free-photo/green-sprouts-dark-soil-against-blurred-background-symbolizing-concept-growth-potential_90220-1462.jpg?t=st=1708622844~exp=1708626444~hmac=9fe25c21cfa7cccb2d83cd0cb7249578a358624934ab919850a623a75e26f853&w=1380'
-    },
-    {
-      name: 'Asif Mahmud Jayem',
-      memberId: 4,
-      email: 'abc@gmail.com',
-      phoneNumber: '01759375796',
-      address: 'Syamoli, Dhaka',
-      fundSource: 'Private Job',
-      image:
-        'https://img.freepik.com/free-photo/green-sprouts-dark-soil-against-blurred-background-symbolizing-concept-growth-potential_90220-1462.jpg?t=st=1708622844~exp=1708626444~hmac=9fe25c21cfa7cccb2d83cd0cb7249578a358624934ab919850a623a75e26f853&w=1380'
-    },
-    {
-      name: 'Asif Mahmud Jayem',
-      memberId: 5,
-      email: 'abc@gmail.com',
-      phoneNumber: '01759375796',
-      address: 'Syamoli, Dhaka',
-      fundSource: 'Private Job',
-      image:
-        'https://img.freepik.com/free-photo/green-sprouts-dark-soil-against-blurred-background-symbolizing-concept-growth-potential_90220-1462.jpg?t=st=1708622844~exp=1708626444~hmac=9fe25c21cfa7cccb2d83cd0cb7249578a358624934ab919850a623a75e26f853&w=1380'
+export function MembersCard() {
+  // const memberList = [
+  //   {
+  //     name: 'Asif Mahmud Jayem',
+  //     memberId: 1,
+  //     email: 'abc@gmail.com',
+  //     phoneNumber: '01759375796',
+  //     address: 'Syamoli, Dhaka',
+  //     fundSource: 'Private Job',
+  //     image:
+  //       'https://img.freepik.com/free-photo/green-sprouts-dark-soil-against-blurred-background-symbolizing-concept-growth-potential_90220-1462.jpg?t=st=1708622844~exp=1708626444~hmac=9fe25c21cfa7cccb2d83cd0cb7249578a358624934ab919850a623a75e26f853&w=1380'
+  //   },
+  //   {
+  //     name: 'Asif Mahmud Jayem',
+  //     memberId: 2,
+  //     email: 'abc@gmail.com',
+  //     phoneNumber: '01759375796',
+  //     address: 'Syamoli, Dhaka',
+  //     fundSource: 'Private Job',
+  //     image:
+  //       'https://img.freepik.com/free-photo/green-sprouts-dark-soil-against-blurred-background-symbolizing-concept-growth-potential_90220-1462.jpg?t=st=1708622844~exp=1708626444~hmac=9fe25c21cfa7cccb2d83cd0cb7249578a358624934ab919850a623a75e26f853&w=1380'
+  //   },
+  //   {
+  //     name: 'Asif Mahmud Jayem',
+  //     memberId: 3,
+  //     email: 'abc@gmail.com',
+  //     phoneNumber: '01759375796',
+  //     address: 'Syamoli, Dhaka',
+  //     fundSource: 'Private Job',
+  //     image:
+  //       'https://img.freepik.com/free-photo/green-sprouts-dark-soil-against-blurred-background-symbolizing-concept-growth-potential_90220-1462.jpg?t=st=1708622844~exp=1708626444~hmac=9fe25c21cfa7cccb2d83cd0cb7249578a358624934ab919850a623a75e26f853&w=1380'
+  //   },
+  //   {
+  //     name: 'Asif Mahmud Jayem',
+  //     memberId: 4,
+  //     email: 'abc@gmail.com',
+  //     phoneNumber: '01759375796',
+  //     address: 'Syamoli, Dhaka',
+  //     fundSource: 'Private Job',
+  //     image:
+  //       'https://img.freepik.com/free-photo/green-sprouts-dark-soil-against-blurred-background-symbolizing-concept-growth-potential_90220-1462.jpg?t=st=1708622844~exp=1708626444~hmac=9fe25c21cfa7cccb2d83cd0cb7249578a358624934ab919850a623a75e26f853&w=1380'
+  //   },
+  //   {
+  //     name: 'Asif Mahmud Jayem',
+  //     memberId: 5,
+  //     email: 'abc@gmail.com',
+  //     phoneNumber: '01759375796',
+  //     address: 'Syamoli, Dhaka',
+  //     fundSource: 'Private Job',
+  //     image:
+  //       'https://img.freepik.com/free-photo/green-sprouts-dark-soil-against-blurred-background-symbolizing-concept-growth-potential_90220-1462.jpg?t=st=1708622844~exp=1708626444~hmac=9fe25c21cfa7cccb2d83cd0cb7249578a358624934ab919850a623a75e26f853&w=1380'
+  //   }
+  // ]
+  const [memberList, setMemberList] = useState<Member[]>([])
+  useEffect(() => {
+    try {
+      axiosInstance.get('/all-members').then((response) => {
+        console.log(response.data)
+        setMemberList(response?.data?.allUsers)
+      })
+    } catch (error) {
+      console.log(error)
     }
-  ]
+  }, [])
+
   return (
     <div className='flex flex-row gap-5 flex-wrap '>
-      {memberList?.map((member) => (
-        <Card key={member?.memberId} className='w-[350px]'>
-          <CardHeader>
-            <CardTitle>{member?.name}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Image
-              src={member?.image}
-              height={0}
-              width={100}
-              alt={`profile img - ${member?.name}`}
-              className='rounded-md'
-            />
-            <CardDescription className='mt-2'>
-              Address: {member?.address}
-              <br />
-              email: {member?.email}
-            </CardDescription>
-          </CardContent>
-          <CardFooter className='flex justify-between'>
-            <AddMoneyModal member={member} />
-          </CardFooter>
-        </Card>
-      ))}
+      {memberList.length > 0 &&
+        memberList?.map((member) => (
+          <Card key={member?._id} className='w-[350px]'>
+            <CardHeader>
+              <CardTitle>{member?.fullName}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Image
+                src={
+                  member?.image ||
+                  'https://img.freepik.com/free-photo/green-sprouts-dark-soil-against-blurred-background-symbolizing-concept-growth-potential_90220-1462.jpg?t=st=1708622844~exp=1708626444~hmac=9fe25c21cfa7cccb2d83cd0cb7249578a358624934ab919850a623a75e26f853&w=1380'
+                }
+                height={0}
+                width={100}
+                alt={`profile img - ${member?.fullName}`}
+                className='rounded-md'
+              />
+              <CardDescription className='mt-2'>
+                Address: {member?.address1}
+                <br />
+                email: {member?.email}
+              </CardDescription>
+            </CardContent>
+            <CardFooter className='flex justify-between'>
+              <AddMoneyModal member={member} />
+            </CardFooter>
+          </Card>
+        ))}
     </div>
   )
 }
@@ -131,13 +149,12 @@ function AddMoneyModal({ member }: { member: Member }) {
     const formData = {
       amount: +form.amount.value,
       note: form.note.value,
-
-      address: member?.address,
+      address1: member?.address1,
       email: member?.email,
       fundSource: member?.fundSource,
       image: member?.image,
-      memberId: member?.memberId,
-      name: member?.name,
+      _id: member?._id,
+      fullName: member?.fullName,
       phoneNumber: member?.phoneNumber
     }
     console.log(formData)
@@ -150,7 +167,7 @@ function AddMoneyModal({ member }: { member: Member }) {
       <DialogContent className='sm:max-w-[425px]'>
         <DialogHeader>
           <DialogTitle>Add Money</DialogTitle>
-          <DialogDescription>{member?.name}</DialogDescription>
+          <DialogDescription>{member?.fullName}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSaveAmount}>
           <div className='grid gap-4 py-4'>
