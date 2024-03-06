@@ -9,6 +9,13 @@ import {
   CardTitle
 } from '@/components/ui/card'
 import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem
+} from '@/components/ui/command'
+import {
   Dialog,
   DialogClose,
   DialogContent,
@@ -20,10 +27,17 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/popover'
 import axiosInstance from '@/hooks/axiosInstance'
+import { cn } from '@/lib/utils'
+import { Check, ChevronsUpDown } from 'lucide-react'
 
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 interface Member {
   fullName: string
   _id: number
@@ -33,7 +47,26 @@ interface Member {
   fundSource: string
   image: string
 }
-
+type ComboBoxProps = {
+  open: boolean
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  value: string // replace with the actual type of your 'value' state
+  setValue: React.Dispatch<React.SetStateAction<string>> // replace with the actual type of your 'value' state
+}
+const months = [
+  'january',
+  'february',
+  'march',
+  'april',
+  'may',
+  'june',
+  'july',
+  'august',
+  'september',
+  'october',
+  'november',
+  'december'
+]
 export default function Home() {
   return (
     <div>
@@ -143,11 +176,14 @@ export function MembersCard() {
 }
 
 function AddMoneyModal({ member }: { member: Member }) {
+  const [open, setOpen] = useState(false)
+  const [value, setValue] = useState('')
   const handleSaveAmount = (e: any) => {
     e.preventDefault()
     const form = e.target
     const formData = {
       amount: +form.amount.value,
+      month: value,
       note: form.note.value,
       address1: member?.address1,
       email: member?.email,
@@ -171,6 +207,17 @@ function AddMoneyModal({ member }: { member: Member }) {
         </DialogHeader>
         <form onSubmit={handleSaveAmount}>
           <div className='grid gap-4 py-4'>
+            <div className='grid grid-cols-4 items-center gap-4'>
+              <Label htmlFor='name' className='text-right'>
+                Select Month
+              </Label>
+              <ComboBox
+                open={open}
+                setOpen={setOpen}
+                value={value}
+                setValue={setValue}
+              />
+            </div>
             <div className='grid grid-cols-4 items-center gap-4'>
               <Label htmlFor='name' className='text-right'>
                 Amount
@@ -204,5 +251,52 @@ function AddMoneyModal({ member }: { member: Member }) {
         </form>
       </DialogContent>
     </Dialog>
+  )
+}
+
+const ComboBox: React.FC<ComboBoxProps> = ({
+  open,
+  setOpen,
+  value,
+  setValue
+}) => {
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant='outline'
+          role='combobox'
+          aria-expanded={open}
+          className='w-[200px] justify-between'>
+          {value ? months.find((month) => month === value) : 'Select month...'}
+          <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className='w-[200px] p-0'>
+        <Command>
+          <CommandInput placeholder='Search month...' />
+          <CommandEmpty>No month found.</CommandEmpty>
+          <CommandGroup>
+            {months.map((month) => (
+              <CommandItem
+                key={month}
+                value={month}
+                onSelect={(currentValue) => {
+                  setValue(currentValue === value ? '' : currentValue)
+                  setOpen(false)
+                }}>
+                <Check
+                  className={cn(
+                    'mr-2 h-4 w-4',
+                    value === month ? 'opacity-100' : 'opacity-0'
+                  )}
+                />
+                {month.toUpperCase()}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </Command>
+      </PopoverContent>
+    </Popover>
   )
 }
