@@ -1,7 +1,8 @@
 import axios, { AxiosInstance } from 'axios'
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: 'http://localhost:8000', //process.env.API_BASE_URL as string,
+  // baseURL: 'http://localhost:8000',
+  baseURL: 'https://rof-investors-server.vercel.app',
   // withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
