@@ -38,14 +38,16 @@ import { Check, ChevronsUpDown } from 'lucide-react'
 
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 interface Member {
   fullName: string
-  _id: number
+  _id: string
   email: string
   phoneNumber: string
   address1: string
   fundSource: string
   image: string
+  gender: string
 }
 type ComboBoxProps = {
   open: boolean
@@ -68,8 +70,22 @@ const months = [
   'december'
 ]
 export default function Home() {
+  const [totalBalance, setTotalBalance] = useState()
+
+  useEffect(() => {
+    try {
+      axiosInstance.get('/get-balance').then((response) => {
+        console.log(response.data)
+        const data = response.data
+        setTotalBalance(data?.totalAmount)
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }, [])
   return (
     <div>
+      <text>Total amount: {totalBalance || 0}tk</text>
       <MembersCard />
     </div>
   )
@@ -77,58 +93,6 @@ export default function Home() {
 }
 
 export function MembersCard() {
-  // const memberList = [
-  //   {
-  //     name: 'Asif Mahmud Jayem',
-  //     memberId: 1,
-  //     email: 'abc@gmail.com',
-  //     phoneNumber: '01759375796',
-  //     address: 'Syamoli, Dhaka',
-  //     fundSource: 'Private Job',
-  //     image:
-  //       'https://img.freepik.com/free-photo/green-sprouts-dark-soil-against-blurred-background-symbolizing-concept-growth-potential_90220-1462.jpg?t=st=1708622844~exp=1708626444~hmac=9fe25c21cfa7cccb2d83cd0cb7249578a358624934ab919850a623a75e26f853&w=1380'
-  //   },
-  //   {
-  //     name: 'Asif Mahmud Jayem',
-  //     memberId: 2,
-  //     email: 'abc@gmail.com',
-  //     phoneNumber: '01759375796',
-  //     address: 'Syamoli, Dhaka',
-  //     fundSource: 'Private Job',
-  //     image:
-  //       'https://img.freepik.com/free-photo/green-sprouts-dark-soil-against-blurred-background-symbolizing-concept-growth-potential_90220-1462.jpg?t=st=1708622844~exp=1708626444~hmac=9fe25c21cfa7cccb2d83cd0cb7249578a358624934ab919850a623a75e26f853&w=1380'
-  //   },
-  //   {
-  //     name: 'Asif Mahmud Jayem',
-  //     memberId: 3,
-  //     email: 'abc@gmail.com',
-  //     phoneNumber: '01759375796',
-  //     address: 'Syamoli, Dhaka',
-  //     fundSource: 'Private Job',
-  //     image:
-  //       'https://img.freepik.com/free-photo/green-sprouts-dark-soil-against-blurred-background-symbolizing-concept-growth-potential_90220-1462.jpg?t=st=1708622844~exp=1708626444~hmac=9fe25c21cfa7cccb2d83cd0cb7249578a358624934ab919850a623a75e26f853&w=1380'
-  //   },
-  //   {
-  //     name: 'Asif Mahmud Jayem',
-  //     memberId: 4,
-  //     email: 'abc@gmail.com',
-  //     phoneNumber: '01759375796',
-  //     address: 'Syamoli, Dhaka',
-  //     fundSource: 'Private Job',
-  //     image:
-  //       'https://img.freepik.com/free-photo/green-sprouts-dark-soil-against-blurred-background-symbolizing-concept-growth-potential_90220-1462.jpg?t=st=1708622844~exp=1708626444~hmac=9fe25c21cfa7cccb2d83cd0cb7249578a358624934ab919850a623a75e26f853&w=1380'
-  //   },
-  //   {
-  //     name: 'Asif Mahmud Jayem',
-  //     memberId: 5,
-  //     email: 'abc@gmail.com',
-  //     phoneNumber: '01759375796',
-  //     address: 'Syamoli, Dhaka',
-  //     fundSource: 'Private Job',
-  //     image:
-  //       'https://img.freepik.com/free-photo/green-sprouts-dark-soil-against-blurred-background-symbolizing-concept-growth-potential_90220-1462.jpg?t=st=1708622844~exp=1708626444~hmac=9fe25c21cfa7cccb2d83cd0cb7249578a358624934ab919850a623a75e26f853&w=1380'
-  //   }
-  // ]
   const [memberList, setMemberList] = useState<Member[]>([])
   useEffect(() => {
     try {
@@ -143,6 +107,11 @@ export function MembersCard() {
 
   return (
     <div className='flex flex-row gap-5 flex-wrap '>
+      {memberList.length == 0 && (
+        <text className='text-red-500'>
+          No user found. Pleas add a Member first.
+        </text>
+      )}
       {memberList.length > 0 &&
         memberList?.map((member) => (
           <Card key={member?._id} className='w-[350px]'>
@@ -178,10 +147,14 @@ export function MembersCard() {
 function AddMoneyModal({ member }: { member: Member }) {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState('')
-  const handleSaveAmount = (e: any) => {
+  const [loading, setLoading] = useState(false)
+
+  const handleSaveAmount = async (e: any) => {
     e.preventDefault()
+    setLoading(true)
     const form = e.target
     const formData = {
+      memberId: member?._id,
       amount: +form.amount.value,
       month: value,
       note: form.note.value,
@@ -189,11 +162,17 @@ function AddMoneyModal({ member }: { member: Member }) {
       email: member?.email,
       fundSource: member?.fundSource,
       image: member?.image,
-      _id: member?._id,
       fullName: member?.fullName,
-      phoneNumber: member?.phoneNumber
+      phoneNumber: member?.phoneNumber,
+      gender: member?.gender
     }
-    console.log(formData)
+    const response = await axiosInstance.post(`/add-balance`, formData)
+    const data = response.data
+    if (data?.status == 201) {
+      toast.success('Balance added')
+      setLoading(false)
+    }
+    console.log(data)
   }
   return (
     <Dialog>
@@ -245,7 +224,9 @@ function AddMoneyModal({ member }: { member: Member }) {
           </div>
           <DialogFooter>
             <DialogClose>
-              <Button type='submit'>Save changes</Button>
+              <Button className='w-[100%]' type='submit'>
+                Submit
+              </Button>
             </DialogClose>
           </DialogFooter>
         </form>

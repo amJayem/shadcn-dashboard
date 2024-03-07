@@ -13,14 +13,15 @@ export function MainLayout({ children }) {
   const pathname = usePathname()
   const navItem = [
     { name: 'Home', route: '/' },
-    { name: 'Add Member', route: '/members' },
-    { name: 'About', route: '/about' }
+    { name: 'Add Member', route: '/members' }
+    // { name: 'About', route: '/about' }
   ]
   const screenWidth = window.innerWidth
   const flexGrow =
     screenWidth > 700 ? '20' : screenWidth < 700 && !showSideBar ? '0' : '35'
+  console.log('screenWidth: ', screenWidth, 'flexGrow: ', flexGrow)
   return (
-    <div className='absolute'>
+    <div className={`${screenWidth < 700 ? 'absolute' : ''} `}>
       <NavBar />
       <button
         onClick={() => setShowSideBar(!showSideBar)}
