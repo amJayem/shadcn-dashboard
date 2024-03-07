@@ -92,7 +92,7 @@ export default function Home() {
   // <CardWithForm />
 }
 
-export function MembersCard() {
+function MembersCard() {
   const [memberList, setMemberList] = useState<Member[]>([])
   useEffect(() => {
     try {
