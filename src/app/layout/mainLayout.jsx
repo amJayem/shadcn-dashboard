@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import NavBar from './nav-bar'
 import { RxHamburgerMenu } from 'react-icons/rx'
 import { FaCircleArrowLeft } from 'react-icons/fa6'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export function MainLayout({ children }) {
   const [showSideBar, setShowSideBar] = useState(true)
@@ -16,7 +16,22 @@ export function MainLayout({ children }) {
     { name: 'Add Member', route: '/members' }
     // { name: 'About', route: '/about' }
   ]
-  const screenWidth = window.innerWidth
+  // const screenWidth = window.innerWidth
+  const [screenWidth, setScreenWidth] = useState(null)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth)
+    }
+
+    handleResize() // Initial call to set initial screenWidth
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, []) // Empty dependency array ensures that this effect runs only once after mounting
+
   const flexGrow =
     screenWidth > 700 ? '20' : screenWidth < 700 && !showSideBar ? '0' : '35'
   console.log('screenWidth: ', screenWidth, 'flexGrow: ', flexGrow)
