@@ -13,8 +13,10 @@ export function MainLayout({ children }) {
   const pathname = usePathname()
   const navItem = [
     { name: 'Home', route: '/' },
-    { name: 'Add Member', route: '/members' }
-    // { name: 'About', route: '/about' }
+    { name: 'Add Member', route: '/members' },
+    { name: 'All Members', route: '/all-members' },
+    { name: 'New project', route: '/new-project' },
+    { name: 'All projects', route: '/all-projects' }
   ]
   // const screenWidth = window.innerWidth
   const [screenWidth, setScreenWidth] = useState(null)
@@ -34,7 +36,7 @@ export function MainLayout({ children }) {
 
   const flexGrow =
     screenWidth > 700 ? '20' : screenWidth < 700 && !showSideBar ? '0' : '35'
-  console.log('screenWidth: ', screenWidth, 'flexGrow: ', flexGrow)
+
   return (
     <div className={`${screenWidth < 700 ? 'absolute' : ''} `}>
       <NavBar />
