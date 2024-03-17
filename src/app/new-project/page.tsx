@@ -18,22 +18,22 @@ const NewProject = () => {
 export default NewProject
 // Define the Zod schema for validation
 const schema = z.object({
-  'project-name': z.string().refine((data) => data.trim().length > 0, {
+  projectTitle: z.string().refine((data) => data.trim().length > 0, {
     message: 'Project name is required'
   }),
-  'project-amount': z.string().refine((data) => data.trim().length > 0, {
+  projectAmount: z.string().refine((data) => data.trim().length > 0, {
     message: 'Project investment amount is required'
   }),
 
-  'project-details': z.string().refine((data) => data.trim().length > 0, {
+  projectDetails: z.string().refine((data) => data.trim().length > 0, {
     message: 'Project details is required'
   })
 })
 
 type FormData = {
-  'project-name': string
-  'project-amount': string
-  'project-details': string
+  projectTitle: string
+  projectAmount: string
+  projectDetails: string
 }
 
 const MyForm: React.FC = () => {
@@ -47,21 +47,21 @@ const MyForm: React.FC = () => {
 
   const formField: FormField[] = [
     {
-      name: 'project-name',
-      label: 'Project Name',
+      name: 'projectTitle',
+      label: 'Project Title',
       type: 'text',
-      placeholder: 'write project name',
+      placeholder: 'write project title',
       defaultValue: ''
     },
     {
-      name: 'project-amount',
+      name: 'projectAmount',
       label: 'Investment amount',
       type: 'number',
       placeholder: 'enter the amount ',
       defaultValue: ''
     },
     {
-      name: 'project-details',
+      name: 'projectDetails',
       label: 'Project details',
       type: 'text',
       placeholder: 'write project details',
