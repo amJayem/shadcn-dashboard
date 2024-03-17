@@ -1,21 +1,25 @@
 'use client'
 import axiosInstance from '@/hooks/axiosInstance'
 import React, { useEffect, useState } from 'react'
+
+interface Project {
+  totalCount: number
+}
+
 interface Member {
-  fullName: string
-  _id: string
-  email: string
-  phoneNumber: string
-  address1: string
-  fundSource: string
-  image: string
-  gender: string
+  allUsers: any[] // You need to specify the type of 'allUsers' based on your data structure
+  totalCount: number
 }
 
 export default function Home() {
-  const [totalBalance, setTotalBalance] = useState()
-  const [projectList, setProjectList] = useState()
-  const [memberList, setMemberList] = useState<Member[]>([])
+  const [totalBalance, setTotalBalance] = useState<number | undefined>(
+    undefined
+  ) // Define type as 'number | undefined'
+  const [projectList, setProjectList] = useState<Project | undefined>(undefined) // Define type as 'Project | undefined'
+  const [memberList, setMemberList] = useState<Member>({
+    allUsers: [],
+    totalCount: 0
+  }) // Define type as 'MemberList'
 
   useEffect(() => {
     try {
@@ -56,9 +60,9 @@ export default function Home() {
 
   return (
     <div>
-      {memberList?.allUsers.length == 0 ? (
+      {memberList?.allUsers.length === 0 ? (
         <text className='text-red-500'>
-          No user is added yet. Pleas add a Member first.
+          No user is added yet. Please add a Member first.
         </text>
       ) : (
         <>
