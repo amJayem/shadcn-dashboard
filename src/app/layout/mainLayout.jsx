@@ -6,11 +6,12 @@ import { usePathname } from 'next/navigation'
 import NavBar from './nav-bar'
 import { RxHamburgerMenu } from 'react-icons/rx'
 import { FaCircleArrowLeft } from 'react-icons/fa6'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 export function MainLayout({ children }) {
   const [showSideBar, setShowSideBar] = useState(true)
   const pathname = usePathname()
+  // console.log(pathname)
   const navItem = [
     { name: 'Home', route: '/' },
     { name: 'Add Member', route: '/members' },
@@ -88,7 +89,7 @@ export function MainLayout({ children }) {
   )
 }
 
-const NavItems = ({ pathname, navItem, screenWidth }) => {
+const NavItems = ({ pathname, navItem }) => {
   return (
     <div
       className='flex flex-col'
@@ -98,26 +99,55 @@ const NavItems = ({ pathname, navItem, screenWidth }) => {
         padding: '5px'
       }}>
       {navItem?.map((item) => (
-        <Link
-          key={item?.route}
-          style={{
-            background: pathname === item?.route ? '#20A459' : '#FFDE59',
-            border:
-              pathname === item?.route
-                ? '2px solid #FFDE59'
-                : '1px solid #20A459',
-            padding: '5px',
-            margin: '5px',
-            borderRadius: '10px',
-            textDecoration: 'none',
-            textAlign: 'center',
-            color: pathname === item?.route ? 'wheat' : ''
-          }}
-          href={item?.route}>
-          <span className={`font-semibold ${screenWidth < 700 && 'text-sm'}`}>
-            {item?.name}
-          </span>
-        </Link>
+        <React.Fragment key={item?.route}>
+          {pathname == '/' && pathname.length == 1 ? (
+            <Link
+              style={{
+                background: pathname.startsWith(item?.route)
+                  ? '#20A459'
+                  : '#FFDE59',
+                border: `1px solid ${
+                  pathname.startsWith(item?.route) ? '#FFDE59' : '#20A459'
+                }`,
+                padding: '5px',
+                margin: '5px',
+                borderRadius: '10px',
+                textDecoration: 'none',
+                textAlign: 'center',
+                color: pathname.startsWith(item?.route) ? 'wheat' : ''
+              }}
+              href={item.route} // Don't forget to specify the href attribute
+            >
+              {item.name}
+            </Link>
+          ) : (
+            <Link
+              style={{
+                background:
+                  pathname.startsWith(item?.route) && item?.route !== '/'
+                    ? '#20A459'
+                    : '#FFDE59',
+                border: `1px solid ${
+                  pathname.startsWith(item?.route) && item?.route !== '/'
+                    ? '#FFDE59'
+                    : '#20A459'
+                }`,
+                padding: '5px',
+                margin: '5px',
+                borderRadius: '10px',
+                textDecoration: 'none',
+                textAlign: 'center',
+                color:
+                  pathname.startsWith(item?.route) && item?.route !== '/'
+                    ? 'wheat'
+                    : ''
+              }}
+              href={item.route} // Don't forget to specify the href attribute
+            >
+              {item.name}
+            </Link>
+          )}
+        </React.Fragment>
       ))}
     </div>
   )
