@@ -37,6 +37,7 @@ import { cn } from '@/lib/utils'
 import { Check, ChevronsUpDown } from 'lucide-react'
 
 import Image from 'next/image'
+import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
@@ -82,12 +83,13 @@ const AllMembers = () => {
 }
 
 export default AllMembers
+
 function MembersCard() {
   const [memberList, setMemberList] = useState<Member[]>([])
   useEffect(() => {
     try {
       axiosInstance.get('/all-members').then((response) => {
-        console.log(response.data)
+        // console.log(response.data)
         setMemberList(response?.data?.allUsers)
       })
     } catch (error) {
@@ -127,6 +129,9 @@ function MembersCard() {
             </CardContent>
             <CardFooter className='flex justify-between'>
               <AddMoneyModal member={member} />
+              <Button variant='link'>
+                <Link href={`/all-members/${member?._id}`}>Details</Link>
+              </Button>
             </CardFooter>
           </Card>
         ))}
