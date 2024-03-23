@@ -11,21 +11,23 @@ import axiosInstance from '@/hooks/axiosInstance'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
+import UpdateProfile from '../update-profile/[id]/page'
 
 interface Params {
   id: string
 }
 
 const MemberDetails: React.FC<{ params: Params }> = async ({ params }) => {
+  let updateProfile = false
   const { id } = params
 
   const response = await axiosInstance.get(`/all-members/${id}`)
-  console.log(response)
   const memberData = response?.data?.member
+  console.log(updateProfile)
 
   return (
     <div>
-      {memberData && (
+      {memberData && !updateProfile && (
         <Card className='w-[350px]'>
           <CardHeader>
             <CardTitle>{memberData.fullName}</CardTitle>
@@ -70,15 +72,15 @@ const MemberDetails: React.FC<{ params: Params }> = async ({ params }) => {
               profile update at: {memberData.updatedAt}
             </CardDescription>
           </CardContent>
+
           <CardFooter className='flex justify-between'>
             <Button>
-              <Link href={`/all-members/${memberData._id}`}>
-                Update Profile
-              </Link>
+              <Link href={`update-profile/${id}`}>Update Profile</Link>
             </Button>
           </CardFooter>
         </Card>
       )}
+      {updateProfile && <UpdateProfile />}
     </div>
   )
 }
