@@ -7,11 +7,12 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
-import getMemberDetails from '@/lib/apis/member'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import UpdateProfile from '../update-profile/[id]/page'
+import { getMemberDetails } from '@/lib/apis/member'
 
 interface Params {
   id: string

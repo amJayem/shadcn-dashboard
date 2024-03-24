@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
-import getAllProjects from '@/lib/apis/projects'
+import { getAllProjects } from '@/lib/apis/projects'
 
 interface Project {
   _id: string

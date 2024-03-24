@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import axiosInstance from '@/hooks/axiosInstance'
-import getMemberDetails from '@/lib/apis/member'
+import { getMemberDetails } from '@/lib/apis/member'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useParams } from 'next/navigation'
 import { useEffect } from 'react'
