@@ -30,7 +30,7 @@ const schema = z.object({
     .email('Invalid email format')
     .refine((data) => data.trim().length > 0, { message: 'Email is required' }),
   phoneNumber: z.string().refine((data) => /^\d{11}$/.test(data), {
-    message: 'Phone Number must be 11 digits with no text'
+    message: 'Phone Number must be 11 digits'
   }),
   address1: z.string().refine((data) => data.trim().length > 0, {
     message: 'Address is required'

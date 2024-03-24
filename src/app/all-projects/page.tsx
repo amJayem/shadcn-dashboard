@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -7,6 +8,7 @@ import {
   CardTitle
 } from '@/components/ui/card'
 import { getAllProjects } from '@/lib/apis/projects'
+import Link from 'next/link'
 
 interface Project {
   _id: string
@@ -49,7 +51,9 @@ const AllProjects = async () => {
               </CardDescription>
             </CardContent>
             <CardFooter className='flex justify-between'>
-              {/* <AddMoneyModal member={member} /> */}
+              <Button variant='link'>
+                <Link href={`/all-projects/${item?._id}`}>Details</Link>
+              </Button>
             </CardFooter>
           </Card>
         ))}
