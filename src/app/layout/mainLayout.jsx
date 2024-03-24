@@ -17,7 +17,8 @@ export function MainLayout({ children }) {
     { name: 'Add Member', route: '/members' },
     { name: 'All Members', route: '/all-members' },
     { name: 'New project', route: '/new-project' },
-    { name: 'All projects', route: '/all-projects' }
+    { name: 'All projects', route: '/all-projects' },
+    { name: 'Our Products', route: '/product' }
   ]
   // const screenWidth = window.innerWidth
   const [screenWidth, setScreenWidth] = useState(null)
