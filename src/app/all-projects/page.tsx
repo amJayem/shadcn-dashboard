@@ -1,4 +1,3 @@
-'use client'
 import {
   Card,
   CardContent,
@@ -7,9 +6,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
-import axiosInstance from '@/hooks/axiosInstance'
-
-import { useEffect, useState } from 'react'
+import getAllProjects from '@/lib/apis/projects'
 
 interface Project {
   _id: string
@@ -18,22 +15,9 @@ interface Project {
   projectDetails: string
 }
 
-const AllProjects = () => {
-  const [projectList, setProjectList] = useState<Project[]>([])
-
-  useEffect(() => {
-    try {
-      axiosInstance.get('/project/all').then((response) => {
-        console.log(response.data)
-        if (response.data.status == 200) {
-          const data = response.data?.allProject
-          setProjectList(data)
-        }
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }, [])
+const AllProjects = async () => {
+  const response = await getAllProjects()
+  const projectList = response.data?.allProject
   return (
     <div className='flex flex-row gap-5 flex-wrap '>
       {projectList.length == 0 && (
@@ -42,7 +26,7 @@ const AllProjects = () => {
         </text>
       )}
       {projectList.length > 0 &&
-        projectList?.map((item) => (
+        projectList?.map((item: any) => (
           <Card key={item?._id} className='w-[350px]'>
             <CardHeader>
               <CardTitle>{item?.projectTitle}</CardTitle>

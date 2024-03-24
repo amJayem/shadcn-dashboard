@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import axiosInstance from '@/hooks/axiosInstance'
-import getMemberDetails from '@/lib/apis/getMemberDetails'
+import getMemberDetails from '@/lib/apis/member'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useParams } from 'next/navigation'
 import { useEffect } from 'react'
@@ -138,7 +138,8 @@ const MyForm: React.FC = () => {
     const fetchMemberDetails = async () => {
       try {
         // Fetch member details from API
-        const data = await getMemberDetails(id as string)
+        const response = await getMemberDetails(id as string)
+        const data = response?.data?.member
         type FormField =
           | 'fullName'
           | 'email'

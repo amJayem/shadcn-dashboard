@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
-import axiosInstance from '@/hooks/axiosInstance'
+import getMemberDetails from '@/lib/apis/member'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
@@ -21,7 +21,7 @@ const MemberDetails: React.FC<{ params: Params }> = async ({ params }) => {
   let updateProfile = false
   const { id } = params
 
-  const response = await axiosInstance.get(`/all-members/${id}`)
+  const response = await getMemberDetails(id as string)
   const memberData = response?.data?.member
   console.log(updateProfile)
 
