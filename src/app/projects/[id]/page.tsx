@@ -13,6 +13,7 @@ import Link from 'next/link'
 import React from 'react'
 
 import { getProjectDetails } from '@/lib/apis/projects'
+import { FaArrowLeft } from 'react-icons/fa6'
 
 interface Params {
   id: string
@@ -26,6 +27,12 @@ const ProjectDetails: React.FC<{ params: Params }> = async ({ params }) => {
 
   return (
     <div>
+      <div className='flex items-center gap-3 mb-5'>
+        <Link href={'/projects'}>
+          <FaArrowLeft />
+        </Link>
+        <text className='text-2xl font-bold'>Project details</text>
+      </div>
       {projectData && (
         <Card className='w-[350px]'>
           <CardHeader>

@@ -151,10 +151,10 @@ export const columns: ColumnDef<Member>[] = [
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={`/all-members/${member?._id}`}>Details</Link>
+              <Link href={`/members/${member?._id}`}>Details</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link href={`/all-members/update-profile/${member?._id}`}>
+              <Link href={`/members/update-profile/${member?._id}`}>
                 Update Profile
               </Link>
             </DropdownMenuItem>

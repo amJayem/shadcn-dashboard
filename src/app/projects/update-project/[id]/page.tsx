@@ -4,9 +4,11 @@ import { Button } from '@/components/ui/button'
 import axiosInstance from '@/hooks/axiosInstance'
 import { getProjectDetails } from '@/lib/apis/projects'
 import { zodResolver } from '@hookform/resolvers/zod'
+import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import React, { useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { FaArrowLeft } from 'react-icons/fa6'
 import { z } from 'zod'
 
 const NewProject = () => {
@@ -115,29 +117,37 @@ const MyForm: React.FC = () => {
   }, [id, setValue])
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className='w-[100%] mx-auto '>
-      {formField.map((field) => (
-        <div key={field.name} className='mb-4'>
-          <label
-            htmlFor={field.name}
-            className='block text-sm font-medium text-gray-600'>
-            {field.label}
-          </label>
-          {field.type === 'text' || 'number' ? (
-            <input
-              defaultValue={field.defaultValue}
-              type={field.type}
-              placeholder={field.placeholder}
-              {...register(field.name)}
-              className='mt-1 p-2 border rounded-md w-full'
-            />
-          ) : null}
-          {errors[field.name] && (
-            <p className='text-red-500 mt-1'>{errors[field.name]?.message}</p>
-          )}
-        </div>
-      ))}
-      <Button type='submit'>Update</Button>
-    </form>
+    <div>
+      <div className='flex items-center gap-3 mb-5'>
+        <Link href={'/projects'}>
+          <FaArrowLeft />
+        </Link>
+        <text className='text-2xl font-bold'>Update project information</text>
+      </div>
+      <form onSubmit={handleSubmit(onSubmit)} className='w-[100%] mx-auto '>
+        {formField.map((field) => (
+          <div key={field.name} className='mb-4'>
+            <label
+              htmlFor={field.name}
+              className='block text-sm font-medium text-gray-600'>
+              {field.label}
+            </label>
+            {field.type === 'text' || 'number' ? (
+              <input
+                defaultValue={field.defaultValue}
+                type={field.type}
+                placeholder={field.placeholder}
+                {...register(field.name)}
+                className='mt-1 p-2 border rounded-md w-full'
+              />
+            ) : null}
+            {errors[field.name] && (
+              <p className='text-red-500 mt-1'>{errors[field.name]?.message}</p>
+            )}
+          </div>
+        ))}
+        <Button type='submit'>Update</Button>
+      </form>
+    </div>
   )
 }

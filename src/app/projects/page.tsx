@@ -22,6 +22,12 @@ const AllProjects = async () => {
   const projectList = response.data?.allProject
   return (
     <div className='flex flex-row gap-5 flex-wrap '>
+      <div className='flex items-center justify-between w-full'>
+        <text className='text-2xl font-bold'>All projects</text>
+        <Button>
+          <Link href={'/projects/new'}>Add new project</Link>
+        </Button>
+      </div>
       {projectList.length == 0 && (
         <text className='text-red-500'>
           No project data found. Pleas add a Project first.
@@ -52,7 +58,7 @@ const AllProjects = async () => {
             </CardContent>
             <CardFooter className='flex justify-between'>
               <Button variant='link'>
-                <Link href={`/all-projects/${item?._id}`}>Details</Link>
+                <Link href={`/projects/${item?._id}`}>Details</Link>
               </Button>
             </CardFooter>
           </Card>

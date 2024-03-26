@@ -13,6 +13,7 @@ import Link from 'next/link'
 import React from 'react'
 import UpdateProfile from '../update-profile/[id]/page'
 import { getMemberDetails } from '@/lib/apis/member'
+import { FaArrowLeft } from 'react-icons/fa6'
 
 interface Params {
   id: string
@@ -28,6 +29,12 @@ const MemberDetails: React.FC<{ params: Params }> = async ({ params }) => {
 
   return (
     <div>
+      <div className='flex items-center gap-3 mb-5'>
+        <Link href={'/members'}>
+          <FaArrowLeft />
+        </Link>
+        <text className='text-2xl font-bold'>Member details information</text>
+      </div>
       {memberData && !updateProfile && (
         <Card className='w-[350px]'>
           <CardHeader>

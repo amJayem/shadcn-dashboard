@@ -1,15 +1,16 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import { useToast } from '@/components/ui/use-toast'
 import axiosInstance from '@/hooks/axiosInstance'
-import { getMemberDetails } from '@/lib/apis/member'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useParams } from 'next/navigation'
-import { useEffect } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { ToastAction } from '@radix-ui/react-toast'
+import Link from 'next/link'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { FaArrowLeft } from 'react-icons/fa6'
 import { z } from 'zod'
 
-export default function UpdateProfile() {
+export default function page() {
   return (
     <div className=''>
       <MyForm />
@@ -30,7 +31,7 @@ const schema = z.object({
     .email('Invalid email format')
     .refine((data) => data.trim().length > 0, { message: 'Email is required' }),
   phoneNumber: z.string().refine((data) => /^\d{11}$/.test(data), {
-    message: 'Phone Number must be 11 digits'
+    message: 'Phone Number must be 11 digits with no text'
   }),
   address1: z.string().refine((data) => data.trim().length > 0, {
     message: 'Address is required'
@@ -49,7 +50,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 const MyForm: React.FC = () => {
-  const { id } = useParams()
+  const { toast } = useToast()
   type FormField = {
     name:
       | 'fullName'
@@ -61,7 +62,7 @@ const MyForm: React.FC = () => {
       | 'fatherName'
       | 'gender'
     label: string
-    type: 'text' | 'email' | 'number' | 'radio'
+    type: 'text' | 'email' | 'tel' | 'radio'
     placeholder: string
     defaultValue: string
   }
@@ -91,7 +92,7 @@ const MyForm: React.FC = () => {
     {
       name: 'phoneNumber',
       label: 'Phone Number',
-      type: 'number',
+      type: 'tel',
       placeholder: 'enter phone number',
       defaultValue: ''
     },
@@ -127,46 +128,29 @@ const MyForm: React.FC = () => {
   ]
   const {
     register,
-    setValue,
     handleSubmit,
     formState: { errors }
   } = useForm<FormData>({
     resolver: zodResolver(schema)
   })
 
-  useEffect(() => {
-    const fetchMemberDetails = async () => {
-      try {
-        // Fetch member details from API
-        const response = await getMemberDetails(id as string)
-        const data = response?.data?.member
-        type FormField =
-          | 'fullName'
-          | 'email'
-          | 'phoneNumber'
-          | 'address1'
-          | 'address2'
-          | 'fundSource'
-          | 'fatherName'
-          | 'gender'
-        type Type = 'text' | 'email' | 'number' | 'radio'
-
-        Object.entries(data).forEach(([key, value]) => {
-          setValue(key as FormField, value as Type)
-        })
-      } catch (error) {
-        console.error('Error fetching member details:', error)
-      }
-    }
-
-    fetchMemberDetails()
-  }, [id, setValue])
-
   const onSubmit: SubmitHandler<FormData> = async (formData) => {
     try {
-      // return console.log(formData)
-      const response = await axiosInstance.put(`/member/update/${id}`, formData)
+      const response = await axiosInstance.post(`/member/add`, formData)
       const responseData = response.data
+      if (responseData.status == 200) {
+        toast({
+          variant: 'default',
+          title: 'New member added successfully!!',
+          action: (
+            <ToastAction altText='all member page'>
+              <Button>
+                <Link href={'/all-members'}>See members</Link>
+              </Button>
+            </ToastAction>
+          )
+        })
+      }
       console.log(responseData)
     } catch (error) {
       console.log(error)
@@ -175,37 +159,45 @@ const MyForm: React.FC = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className='w-[100%] mx-auto '>
-      {formField.map((field) => (
-        <div key={field.name} className='mb-4'>
-          <label
-            htmlFor={field.name}
-            className='block text-sm font-medium text-gray-600'>
-            {field.label}
-          </label>
-          {field.type === 'text' ||
-          field.type === 'email' ||
-          field.type === 'radio' ||
-          field.type === 'number' ? (
-            <input
-              defaultValue={field.defaultValue}
-              type={field.type}
-              placeholder={field.placeholder}
-              {...register(field.name)}
-              className='mt-1 p-2 border rounded-md w-full'
-            />
-          ) : null}
-          {errors[field.name] && (
-            <p className='text-red-500 mt-1'>{errors[field.name]?.message}</p>
-          )}
-        </div>
-      ))}
-      <Button
-        type='submit'
-        // className='bg-blue-500 text-white px-4 py-2 rounded-md'
-      >
-        Submit
-      </Button>
-    </form>
+    <div>
+      <div className='flex items-center gap-3 mb-5'>
+        <Link href={'/members'}>
+          <FaArrowLeft />
+        </Link>
+        <text className='text-2xl font-bold'>Add new member</text>
+      </div>
+      <form onSubmit={handleSubmit(onSubmit)} className='w-[100%] mx-auto '>
+        {formField.map((field) => (
+          <div key={field.name} className='mb-4'>
+            <label
+              htmlFor={field.name}
+              className='block text-sm font-medium text-gray-600'>
+              {field.label}
+            </label>
+            {field.type === 'text' ||
+            field.type === 'email' ||
+            field.type === 'radio' ||
+            field.type === 'tel' ? (
+              <input
+                defaultValue={field.defaultValue}
+                type={field.type}
+                placeholder={field.placeholder}
+                {...register(field.name)}
+                className='mt-1 p-2 border rounded-md w-full'
+              />
+            ) : null}
+            {errors[field.name] && (
+              <p className='text-red-500 mt-1'>{errors[field.name]?.message}</p>
+            )}
+          </div>
+        ))}
+        <Button
+          type='submit'
+          // className='bg-blue-500 text-white px-4 py-2 rounded-md'
+        >
+          Submit
+        </Button>
+      </form>
+    </div>
   )
 }

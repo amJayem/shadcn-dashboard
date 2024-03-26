@@ -14,10 +14,8 @@ export function MainLayout({ children }) {
   // console.log(pathname)
   const navItem = [
     { name: 'Home', route: '/' },
-    { name: 'Add Member', route: '/members' },
-    { name: 'All Members', route: '/all-members' },
-    { name: 'New project', route: '/new-project' },
-    { name: 'All projects', route: '/all-projects' },
+    { name: 'Members', route: '/members' },
+    { name: 'Projects', route: '/projects' },
     { name: 'Our Products', route: '/product' }
   ]
   // const screenWidth = window.innerWidth
