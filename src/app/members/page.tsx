@@ -1,8 +1,11 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import { useToast } from '@/components/ui/use-toast'
 import axiosInstance from '@/hooks/axiosInstance'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { ToastAction } from '@radix-ui/react-toast'
+import Link from 'next/link'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -46,6 +49,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 const MyForm: React.FC = () => {
+  const { toast } = useToast()
   type FormField = {
     name:
       | 'fullName'
@@ -133,6 +137,19 @@ const MyForm: React.FC = () => {
     try {
       const response = await axiosInstance.post(`/member/add`, formData)
       const responseData = response.data
+      if (responseData.status == 200) {
+        toast({
+          variant: 'default',
+          title: 'New member added successfully!!',
+          action: (
+            <ToastAction altText='all member page'>
+              <Button>
+                <Link href={'/all-members'}>See members</Link>
+              </Button>
+            </ToastAction>
+          )
+        })
+      }
       console.log(responseData)
     } catch (error) {
       console.log(error)
