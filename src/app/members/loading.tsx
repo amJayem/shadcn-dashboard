@@ -1,5 +1,5 @@
 import React from 'react'
 
 export default function loading() {
-  return <div>Loading...</div>
+  return <div>Loading member...</div>
 }
