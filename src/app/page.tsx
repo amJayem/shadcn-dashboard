@@ -12,9 +12,7 @@ interface Member {
 }
 
 export default function Home() {
-  const [totalBalance, setTotalBalance] = useState<number | undefined>(
-    undefined
-  ) // Define type as 'number | undefined'
+  const [totalBalance, setTotalBalance] = useState('0') // Define type as 'number | undefined'
   const [projectList, setProjectList] = useState<Project | undefined>(undefined) // Define type as 'Project | undefined'
   const [memberList, setMemberList] = useState<Member>({
     allUsers: [],
@@ -58,7 +56,7 @@ export default function Home() {
     }
   }, [])
 
-  const totalInvestedAmount = parseFloat(totalBalance || 0)
+  const totalInvestedAmount = parseFloat(totalBalance)
 
   // Format the amount as a bdt amount
   const formatted = new Intl.NumberFormat('en-US', {
