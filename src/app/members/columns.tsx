@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useToast } from '@/components/ui/use-toast'
 import axiosInstance from '@/hooks/axiosInstance'
 import { cn } from '@/lib/utils'
 import {
@@ -169,6 +170,7 @@ function AddMoneyModal({ member }: { member: Member }) {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState('')
   const [loading, setLoading] = useState(false)
+  const { toast } = useToast()
 
   const handleSaveAmount = async (e: any) => {
     e.preventDefault()
@@ -190,10 +192,10 @@ function AddMoneyModal({ member }: { member: Member }) {
     const response = await axiosInstance.post(`/add-balance`, formData)
     const data = response.data
     if (data?.status == 201) {
-      // toast.success('Balance added')
+      toast({ description: 'Balance added' })
       setLoading(false)
     }
-    console.log(data)
+    // console.log(data)
   }
   return (
     <Dialog>
