@@ -55,7 +55,6 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: 'productWholesalePrice',
     header: ({ column }) => {
-      const colData = Number(column)
       return (
         <Button
           variant='ghost'

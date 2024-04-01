@@ -58,6 +58,14 @@ export default function Home() {
     }
   }, [])
 
+  const totalInvestedAmount = parseFloat(totalBalance || 0)
+
+  // Format the amount as a bdt amount
+  const formatted = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'bdt'
+  }).format(totalInvestedAmount)
+
   return (
     <div>
       {memberList?.allUsers.length === 0 ? (
@@ -66,7 +74,7 @@ export default function Home() {
         </text>
       ) : (
         <>
-          <text>Total amount: {totalBalance || 0}tk</text>
+          <text>Total invested amount: {formatted || 0}</text>
           <br />
           <text>Total projects: {projectList?.totalCount || 0}</text>
           <br />
