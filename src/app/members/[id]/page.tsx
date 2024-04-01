@@ -8,24 +8,25 @@ import {
   CardTitle
 } from '@/components/ui/card'
 
+import { getMemberDetails } from '@/lib/apis/member'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import UpdateProfile from '../update-profile/[id]/page'
-import { getMemberDetails } from '@/lib/apis/member'
 import { FaArrowLeft } from 'react-icons/fa6'
+import { PaymentHistoryTable } from './payment-history-table'
+import { columns } from './columns'
 
 interface Params {
   id: string
 }
 
 const MemberDetails: React.FC<{ params: Params }> = async ({ params }) => {
-  let updateProfile = false
   const { id } = params
 
   const response = await getMemberDetails(id as string)
   const memberData = response?.data?.member
-  console.log(updateProfile)
+  const balanceHistory = response?.data?.balanceHistory
+  console.log('balanceHistory: ', balanceHistory)
 
   return (
     <div>
@@ -35,7 +36,7 @@ const MemberDetails: React.FC<{ params: Params }> = async ({ params }) => {
         </Link>
         <text className='text-2xl font-bold'>Member details information</text>
       </div>
-      {memberData && !updateProfile && (
+      {memberData && (
         <Card className='w-[350px]'>
           <CardHeader>
             <CardTitle>{memberData.fullName}</CardTitle>
@@ -88,7 +89,7 @@ const MemberDetails: React.FC<{ params: Params }> = async ({ params }) => {
           </CardFooter>
         </Card>
       )}
-      {updateProfile && <UpdateProfile />}
+      <PaymentHistoryTable columns={columns} data={balanceHistory} />
     </div>
   )
 }
