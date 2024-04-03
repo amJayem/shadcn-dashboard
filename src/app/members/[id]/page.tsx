@@ -26,8 +26,22 @@ const MemberDetails: React.FC<{ params: Params }> = async ({ params }) => {
   const response = await getMemberDetails(id as string)
   const memberData = response?.data?.member
   const balanceHistory = response?.data?.balanceHistory
-  console.log('balanceHistory: ', balanceHistory)
+  // console.log('balanceHistory: ', balanceHistory)
 
+  let totalAmount = 0
+
+  // Iterate over each object in the balance array
+  for (const item of balanceHistory) {
+    // Add the amount value of the current object to the total sum
+    totalAmount += item.amount
+  }
+
+  const formatTotalAmount = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'bdt'
+  }).format(totalAmount)
+
+  // console.log(formatTotalAmount)
   return (
     <div>
       <div className='flex items-center gap-3 mb-5'>
@@ -89,6 +103,11 @@ const MemberDetails: React.FC<{ params: Params }> = async ({ params }) => {
           </CardFooter>
         </Card>
       )}
+      <div className='my-5'>
+        <text className='text-2xl my-10'>
+          Total invested amount: {formatTotalAmount}
+        </text>
+      </div>
       <PaymentHistoryTable columns={columns} data={balanceHistory} />
     </div>
   )
