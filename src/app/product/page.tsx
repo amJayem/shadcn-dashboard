@@ -16,7 +16,7 @@ export type Product = {
 const AddProduct: React.FC = async () => {
   const response = await getAllProducts()
   const totalProducts = response.data.totalCount
-  const products = response.data.data
+  const products = response.data.allProducts
   // console.log(products)
 
   return (
