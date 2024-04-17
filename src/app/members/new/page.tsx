@@ -137,21 +137,20 @@ const MyForm: React.FC = () => {
   const onSubmit: SubmitHandler<FormData> = async (formData) => {
     try {
       const response = await axiosInstance.post(`/member/add`, formData)
-      const responseData = response.data
-      if (responseData.status == 200) {
+      if (response.status == 201) {
         toast({
           variant: 'default',
           title: 'New member added successfully!!',
           action: (
             <ToastAction altText='all member page'>
               <Button>
-                <Link href={'/all-members'}>See members</Link>
+                <Link href={'/members'}>See members</Link>
               </Button>
             </ToastAction>
           )
         })
       }
-      console.log(responseData)
+      console.log(response)
     } catch (error) {
       console.log(error)
     }

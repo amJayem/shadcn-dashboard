@@ -1,6 +1,9 @@
 'use client'
 import { Button } from '@/components/ui/button'
+import { ToastAction } from '@/components/ui/toast'
+import { toast } from '@/components/ui/use-toast'
 import { addProduct } from '@/lib/apis/product'
+import Link from 'next/link'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -20,8 +23,20 @@ const AddProduct: React.FC = () => {
       // console.log(newData)
       // return
       const response = await addProduct(modifiedData)
-      const responseData = response?.data
-      console.log(responseData)
+      if (response?.status == 201) {
+        toast({
+          variant: 'default',
+          title: 'New product added successfully!!',
+          action: (
+            <ToastAction altText='all product page'>
+              <Button>
+                <Link href={'/product'}>See members</Link>
+              </Button>
+            </ToastAction>
+          )
+        })
+      }
+      console.log(response)
     } catch (error) {
       console.log(error)
     }
