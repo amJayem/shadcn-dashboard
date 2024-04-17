@@ -143,9 +143,7 @@ const MyForm: React.FC = () => {
           title: 'New member added successfully!!',
           action: (
             <ToastAction altText='all member page'>
-              <Button>
-                <Link href={'/members'}>See members</Link>
-              </Button>
+              <Link href={'/members'}>See members</Link>
             </ToastAction>
           )
         })

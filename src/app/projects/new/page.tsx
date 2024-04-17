@@ -1,6 +1,8 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import { ToastAction } from '@/components/ui/toast'
+import { toast } from '@/components/ui/use-toast'
 import axiosInstance from '@/hooks/axiosInstance'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
@@ -81,8 +83,18 @@ const MyForm: React.FC = () => {
   const onSubmit: SubmitHandler<FormData> = async (formData) => {
     try {
       const response = await axiosInstance.post(`/project/new`, formData)
-      const responseData = response.data
-      console.log(responseData)
+      if (response?.status == 201) {
+        toast({
+          variant: 'default',
+          title: 'New product added successfully!!',
+          action: (
+            <ToastAction altText='all product page'>
+              <Link href={'/projects'}>See projects</Link>
+            </ToastAction>
+          )
+        })
+      }
+      console.log(response)
     } catch (error) {
       console.log(error)
     }

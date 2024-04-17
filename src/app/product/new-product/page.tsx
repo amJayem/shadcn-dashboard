@@ -29,9 +29,7 @@ const AddProduct: React.FC = () => {
           title: 'New product added successfully!!',
           action: (
             <ToastAction altText='all product page'>
-              <Button>
-                <Link href={'/product'}>See members</Link>
-              </Button>
+              <Link href={'/product'}>See products</Link>
             </ToastAction>
           )
         })
