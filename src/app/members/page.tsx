@@ -28,7 +28,6 @@ const AllMembers = async () => {
       )}
       <div className='flex items-center justify-between w-full'>
         <text className='text-2xl font-bold'>All members </text>
-        <text>{data.length}</text>
         <Button>
           <Link href={'/members/new'}>Add new member</Link>
         </Button>
