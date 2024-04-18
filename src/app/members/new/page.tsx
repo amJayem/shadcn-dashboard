@@ -4,9 +4,11 @@ import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import axiosInstance from '@/hooks/axiosInstance'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ToastAction } from '@radix-ui/react-toast'
+import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
-import { useForm, SubmitHandler } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa6'
 import { z } from 'zod'
 
@@ -50,7 +52,9 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 const MyForm: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
+  const router = useRouter()
   type FormField = {
     name:
       | 'fullName'
@@ -136,21 +140,20 @@ const MyForm: React.FC = () => {
 
   const onSubmit: SubmitHandler<FormData> = async (formData) => {
     try {
+      setIsLoading(true)
       const response = await axiosInstance.post(`/member/add`, formData)
       if (response.status == 201) {
         toast({
           variant: 'default',
-          title: 'New member added successfully!!',
-          action: (
-            <ToastAction altText='all member page'>
-              <Link href={'/members'}>See members</Link>
-            </ToastAction>
-          )
+          title: 'New member added successfully!!'
         })
+        router.push('/members')
       }
       console.log(response)
     } catch (error) {
       console.log(error)
+    } finally {
+      setIsLoading(false)
     }
     // Add your form submission logic here
   }
@@ -188,12 +191,14 @@ const MyForm: React.FC = () => {
             )}
           </div>
         ))}
-        <Button
-          type='submit'
-          // className='bg-blue-500 text-white px-4 py-2 rounded-md'
-        >
-          Submit
-        </Button>
+        {isLoading ? (
+          <Button disabled>
+            <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+            Loading...
+          </Button>
+        ) : (
+          <Button type='submit'>Submit</Button>
+        )}
       </form>
     </div>
   )

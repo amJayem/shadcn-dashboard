@@ -1,19 +1,21 @@
 'use client'
 import { Button } from '@/components/ui/button'
-import { ToastAction } from '@/components/ui/toast'
 import { toast } from '@/components/ui/use-toast'
 import { addProduct } from '@/lib/apis/product'
-import Link from 'next/link'
-import React from 'react'
+import { Loader2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 // Define component function
 const AddProduct: React.FC = () => {
   const { register, handleSubmit } = useForm()
-
+  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
   // Form submission handler
   const onSubmit = async (data: any) => {
     try {
+      setIsLoading(true)
       const modifiedData = {
         ...data,
         productQuantity: parseInt(data.productQuantity),
@@ -26,17 +28,15 @@ const AddProduct: React.FC = () => {
       if (response?.status == 201) {
         toast({
           variant: 'default',
-          title: 'New product added successfully!!',
-          action: (
-            <ToastAction altText='all product page'>
-              <Link href={'/product'}>See products</Link>
-            </ToastAction>
-          )
+          title: 'New product added successfully!!'
         })
+        router.push('/product')
       }
       console.log(response)
     } catch (error) {
       console.log(error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -114,7 +114,15 @@ const AddProduct: React.FC = () => {
           {...register('note')}
         />
       </div>
-      <Button type='submit'>Save new Product</Button>
+
+      {isLoading ? (
+        <Button disabled>
+          <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+          Saving...
+        </Button>
+      ) : (
+        <Button type='submit'>Save new Product</Button>
+      )}
     </form>
   )
 }

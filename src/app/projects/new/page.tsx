@@ -5,8 +5,10 @@ import { ToastAction } from '@/components/ui/toast'
 import { toast } from '@/components/ui/use-toast'
 import axiosInstance from '@/hooks/axiosInstance'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
+import { useRouter } from 'next/navigation'
+import React, { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa6'
 import { z } from 'zod'
@@ -41,6 +43,8 @@ type FormData = {
 }
 
 const MyForm: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
   type FormField = {
     name: keyof FormData
     label: string
@@ -82,21 +86,20 @@ const MyForm: React.FC = () => {
 
   const onSubmit: SubmitHandler<FormData> = async (formData) => {
     try {
+      setIsLoading(true)
       const response = await axiosInstance.post(`/project/new`, formData)
       if (response?.status == 201) {
         toast({
           variant: 'default',
-          title: 'New product added successfully!!',
-          action: (
-            <ToastAction altText='all product page'>
-              <Link href={'/projects'}>See projects</Link>
-            </ToastAction>
-          )
+          title: 'New product added successfully!!'
         })
+        router.push('/projects')
       }
       console.log(response)
     } catch (error) {
       console.log(error)
+    } finally {
+      setIsLoading(false)
     }
     // Add your form submission logic here
   }
@@ -131,7 +134,15 @@ const MyForm: React.FC = () => {
             )}
           </div>
         ))}
-        <Button type='submit'>Save </Button>
+
+        {isLoading ? (
+          <Button disabled>
+            <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+            Saving...
+          </Button>
+        ) : (
+          <Button type='submit'>Save</Button>
+        )}
       </form>
     </div>
   )
