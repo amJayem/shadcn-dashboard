@@ -5,9 +5,11 @@ import {
   getProductDetails,
   updateProduct
 } from '@/lib/apis/product'
+import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { FaArrowLeft } from 'react-icons/fa6'
 
 // Define component function
 const AddProduct: React.FC = () => {
@@ -51,6 +53,12 @@ const AddProduct: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='w-[100%] mx-auto '>
+      <div className='flex items-center gap-3 mb-5'>
+        <Link href={'/product'}>
+          <FaArrowLeft />
+        </Link>
+        <text className='text-2xl font-bold'>Update Product info</text>
+      </div>
       <div className='mb-4'>
         <label
           htmlFor='productTitle'
