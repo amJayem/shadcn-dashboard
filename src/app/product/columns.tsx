@@ -13,6 +13,9 @@ import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { DeleteModal } from '@/components/deleteModal'
+import { deleteProduct } from '@/lib/apis/product'
+import { useToast } from '@/components/ui/use-toast'
 
 export type Product = {
   _id: string
@@ -117,6 +120,36 @@ export const columns: ColumnDef<Product>[] = [
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+      )
+    }
+  },
+  {
+    id: 'delete',
+    enableHiding: false,
+    header: () => <div className='text-right'>Delete</div>,
+    cell: ({ row }) => {
+      const { toast } = useToast()
+      const deleteFunction = async (id: any) => {
+        const response = await deleteProduct(id as string)
+        const data = response?.data
+
+        if (data?.data?.acknowledged == true) {
+          toast({ description: data?.message, duration: 1000 })
+        } else {
+          toast({
+            variant: 'destructive',
+            title: 'Delete Failed',
+            duration: 1000
+          })
+        }
+      }
+
+      const title = row.getValue('productTitle')
+      const id = row.original._id
+      return (
+        <div className='text-right font-medium'>
+          <DeleteModal data={{ title, id, deleteFunction }} />
+        </div>
       )
     }
   }
