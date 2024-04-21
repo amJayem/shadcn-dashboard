@@ -1,4 +1,4 @@
-import { DataTable } from '@/components/data-table'
+import { DataTable } from '@/app/product/data-table'
 import { Button } from '@/components/ui/button'
 import { getAllProducts } from '@/lib/apis/product'
 import Link from 'next/link'
