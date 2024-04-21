@@ -32,6 +32,6 @@ export async function deleteProduct(id: string) {
   try {
     return await axiosInstance.delete(`/product/delete/${id}`)
   } catch (error) {
-    console.error('Delete error:', error)
+    console.error('Error occurred during deletion:', error)
   }
 }
