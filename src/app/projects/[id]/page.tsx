@@ -12,6 +12,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
+// import { useToast } from '@/components/ui/use-toast'
+import { DeleteModal } from '@/components/deleteModal'
 import { getProjectDetails } from '@/lib/apis/projects'
 import { FaArrowLeft } from 'react-icons/fa6'
 
@@ -21,7 +23,7 @@ interface Params {
 
 const ProjectDetails: React.FC<{ params: Params }> = async ({ params }) => {
   const { id } = params
-
+  // const { toast } = useToast()
   const response = await getProjectDetails(id as string)
   const projectData = response?.data?.data
 
@@ -67,6 +69,14 @@ const ProjectDetails: React.FC<{ params: Params }> = async ({ params }) => {
             <Button>
               <Link href={`update-project/${id}`}>Update Project </Link>
             </Button>
+            <DeleteModal
+              data={{
+                title: projectData.projectTitle,
+                id: projectData._id,
+                api: `project/delete/${id}`,
+                navigate: '/projects'
+              }}
+            />
           </CardFooter>
         </Card>
       )}
