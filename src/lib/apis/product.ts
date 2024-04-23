@@ -27,11 +27,3 @@ export async function updateProduct(id: string, data: any) {
     console.error('Error fetching Product details:', error)
   }
 }
-
-export async function deleteProduct(id: string) {
-  try {
-    return await axiosInstance.delete(`/product/delete/${id}`)
-  } catch (error) {
-    console.error('Error occurred during deletion:', error)
-  }
-}
