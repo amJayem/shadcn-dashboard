@@ -15,6 +15,7 @@ import React from 'react'
 import { FaArrowLeft } from 'react-icons/fa6'
 import { PaymentHistoryTable } from './payment-history-table'
 import { columns } from './columns'
+import { DeleteModal } from '@/components/deleteModal'
 
 interface Params {
   id: string
@@ -100,6 +101,14 @@ const MemberDetails: React.FC<{ params: Params }> = async ({ params }) => {
             <Button>
               <Link href={`update-profile/${id}`}>Update Profile</Link>
             </Button>
+            <DeleteModal
+              data={{
+                title: memberData.fullName,
+                id,
+                api: `member/delete/${id}`,
+                navigate: '/members'
+              }}
+            />
           </CardFooter>
         </Card>
       )}
