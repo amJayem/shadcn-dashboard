@@ -1,3 +1,4 @@
+'use client'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -7,8 +8,8 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
-import { getAllProjects } from '@/lib/apis/projects'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 interface Project {
   _id: string
@@ -18,12 +19,34 @@ interface Project {
 }
 
 const AllProjects = async () => {
-  const response = await getAllProjects()
-  const projectList = response.data?.allProject
+  // const response = await getAllProjects()
+  // const projectList = response.data?.allProject
+
+  const [projectList, setProjectList] = useState<Project[]>([])
+  const [totalProject, setTotalProject] = useState()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = //await axiosInstance.get('/all-members')
+          await fetch(`https://rof-investors-server.vercel.app/project/all`)
+        const data = await response.json()
+
+        console.log(data)
+        setProjectList(data?.allProject)
+        setTotalProject(data?.totalCount)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+
+    fetchData()
+  }, [])
+
   return (
     <div className='flex flex-row gap-5 flex-wrap '>
       <div className='flex items-center justify-between w-full'>
-        <text className='text-2xl font-bold'>All projects</text>
+        <text className='text-2xl font-bold'>All projects: {totalProject}</text>
         <Button>
           <Link href={'/projects/new'}>Add new project</Link>
         </Button>
