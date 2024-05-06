@@ -47,7 +47,7 @@ export default function Home() {
 
   useEffect(() => {
     try {
-      axiosInstance.get('/all-members').then((response) => {
+      axiosInstance.get('/member/all').then((response) => {
         console.log(response.data)
         setMemberList(response?.data)
       })

@@ -30,7 +30,7 @@ const AllMembers = async () => {
     const fetchData = async () => {
       try {
         const response = //await axiosInstance.get('/all-members')
-          await fetch(`https://rof-investors-server.vercel.app/all-members`)
+          await fetch(`https://rof-investors-server.vercel.app/member/all`)
         const data = await response.json()
         // const data = response?.data
         console.log(data)
