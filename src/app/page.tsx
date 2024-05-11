@@ -12,6 +12,7 @@ interface Member {
 }
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true)
   const [totalBalance, setTotalBalance] = useState('0') // Define type as 'number | undefined'
   const [projectList, setProjectList] = useState<Project | undefined>(undefined) // Define type as 'Project | undefined'
   const [memberList, setMemberList] = useState<Member>({
@@ -19,41 +20,47 @@ export default function Home() {
     totalCount: 0
   }) // Define type as 'MemberList'
 
+  // Load data when the component mounts
   useEffect(() => {
-    try {
-      axiosInstance.get('/get-balance').then((response) => {
-        console.log(response.data)
+    setIsLoading(true)
+    // Fetch total balance
+    axiosInstance
+      .get('/get-balance')
+      .then((response) => {
+        // console.log(response.data)
         const data = response.data
         setTotalBalance(data?.totalAmount)
+        setIsLoading(false)
       })
-    } catch (error) {
-      console.log(error)
-    }
-  }, [])
+      .catch((error) => {
+        console.log(error)
+        setIsLoading(false)
+      })
 
-  useEffect(() => {
-    try {
-      axiosInstance.get('/project/all').then((response) => {
-        console.log(response.data)
-        if (response.data.status == 200) {
+    // Fetch project list
+    axiosInstance
+      .get('/project/all')
+      .then((response) => {
+        // console.log(response.data)
+        if (response.data.status === 200) {
           const data = response.data
           setProjectList(data)
         }
       })
-    } catch (error) {
-      console.log(error)
-    }
-  }, [])
+      .catch((error) => {
+        console.log(error)
+      })
 
-  useEffect(() => {
-    try {
-      axiosInstance.get('/member/all').then((response) => {
-        console.log(response.data)
+    // Fetch member list
+    axiosInstance
+      .get('/member/all')
+      .then((response) => {
+        // console.log(response.data)
         setMemberList(response?.data)
       })
-    } catch (error) {
-      console.log(error)
-    }
+      .catch((error) => {
+        console.log(error)
+      })
   }, [])
 
   const totalInvestedAmount = parseFloat(totalBalance)
@@ -66,17 +73,23 @@ export default function Home() {
 
   return (
     <div>
-      {memberList?.allUsers.length === 0 ? (
-        <text className='text-red-500'>
-          No user is added yet. Please add a Member first.
-        </text>
+      {isLoading ? (
+        <text>Loading...</text>
       ) : (
         <>
-          <text>Total invested amount: {formatted || 0}</text>
-          <br />
-          <text>Total projects: {projectList?.totalCount || 0}</text>
-          <br />
-          <text>Total Investors: {memberList?.totalCount || 0}</text>
+          {memberList?.allUsers.length === 0 && !isLoading ? (
+            <text className='text-red-500'>
+              No user is added yet. Please add a Member first.
+            </text>
+          ) : (
+            <>
+              <text>Total invested amount: {formatted || 0}</text>
+              <br />
+              <text>Total projects: {projectList?.totalCount || 0}</text>
+              <br />
+              <text>Total Investors: {memberList?.totalCount || 0}</text>
+            </>
+          )}
         </>
       )}
     </div>
