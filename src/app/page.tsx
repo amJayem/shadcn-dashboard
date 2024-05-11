@@ -13,8 +13,9 @@ interface Member {
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
-  const [totalBalance, setTotalBalance] = useState('0') // Define type as 'number | undefined'
-  const [projectList, setProjectList] = useState<Project | undefined>(undefined) // Define type as 'Project | undefined'
+  const [totalBalance, setTotalBalance] = useState('0')
+  const [totalProjectCost, setTotalProjectCost] = useState('0')
+  const [projectList, setProjectList] = useState<Project>() // Define type as 'Project | undefined'
   const [memberList, setMemberList] = useState<Member>({
     allUsers: [],
     totalCount: 0
@@ -30,6 +31,19 @@ export default function Home() {
         // console.log(response.data)
         const data = response.data
         setTotalBalance(data?.totalAmount)
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.log(error)
+        setIsLoading(false)
+      })
+
+    axiosInstance
+      .get('/product/cost')
+      .then((response) => {
+        // console.log(response.data)
+        const data = response.data
+        setTotalProjectCost(data?.totalAmountCost)
         setIsLoading(false)
       })
       .catch((error) => {
@@ -63,13 +77,21 @@ export default function Home() {
       })
   }, [])
 
-  const totalInvestedAmount = parseFloat(totalBalance)
-
   // Format the amount as a bdt amount
-  const formatted = new Intl.NumberFormat('en-US', {
+  const formattedTotalFund = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'bdt'
-  }).format(totalInvestedAmount)
+  }).format(parseFloat(totalBalance))
+
+  const formattedProjectCost = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'bdt'
+  }).format(parseFloat(totalProjectCost))
+
+  const formatRestOfFund = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'bdt'
+  }).format(parseFloat(totalBalance) - parseFloat(totalProjectCost))
 
   return (
     <div>
@@ -82,13 +104,13 @@ export default function Home() {
               No user is added yet. Please add a Member first.
             </text>
           ) : (
-            <>
-              <text>Total invested amount: {formatted || 0}</text>
-              <br />
-              <text>Total projects: {projectList?.totalCount || 0}</text>
-              <br />
-              <text>Total Investors: {memberList?.totalCount || 0}</text>
-            </>
+            <div className='flex flex-col gap-2'>
+              <text> Investors: {memberList?.totalCount || 0}</text>
+              <text> Amount (Total Fund Raise): {formattedTotalFund || 0}</text>
+              <text> Projects: {projectList?.totalCount || 0}</text>
+              <text> Invested amount: {formattedProjectCost || 0}</text>
+              <text>Balance of fund(ready to invest): {formatRestOfFund} </text>
+            </div>
           )}
         </>
       )}
