@@ -56,20 +56,37 @@ const AddProduct: React.FC = () => {
           {...register('productTitle')}
         />
       </div>
-      <div className='mb-4'>
-        <label
-          htmlFor='productQuantity'
-          className='block text-sm font-medium text-gray-600'>
-          Product Quantity
-        </label>
-        <input
-          required
-          type='number'
-          min={0}
-          placeholder='Write Product Quantity'
-          className='mt-1 p-2 border rounded-md w-full'
-          {...register('productQuantity')}
-        />
+      <div className='flex gap-5'>
+        <div className='mb-4 flex-1'>
+          <label
+            htmlFor='productQuantity'
+            className='block text-sm font-medium text-gray-600'>
+            Product Quantity
+          </label>
+          <input
+            required
+            type='number'
+            min={0}
+            placeholder='Write Product Quantity'
+            className='mt-1 p-2 border rounded-md w-full'
+            {...register('productQuantity')}
+          />
+        </div>
+        <div className='mb-4'>
+          <label
+            htmlFor='unit'
+            className='block text-sm font-medium text-gray-600'>
+            Unit
+          </label>
+          <input
+            required
+            type='text'
+            min={0}
+            placeholder='Quantity Unit (kg, Ltr, ...)'
+            className='mt-1 p-2 border rounded-md w-full'
+            {...register('unit')}
+          />
+        </div>
       </div>
       <div className='mb-4'>
         <label
@@ -78,10 +95,10 @@ const AddProduct: React.FC = () => {
           Product Wholesale Price
         </label>
         <input
-          required
+          // required
           type='number'
           min={0}
-          placeholder='Enter Wholesale Price'
+          placeholder='Enter Wholesale Price (optional)'
           className='mt-1 p-2 border rounded-md w-full'
           {...register('productWholesalePrice')}
         />
@@ -109,7 +126,7 @@ const AddProduct: React.FC = () => {
         </label>
         <input
           type='text'
-          placeholder='Write a note (optional)'
+          placeholder='Write a note or advise for customer (optional)'
           className='mt-1 p-2 border rounded-md w-full'
           {...register('note')}
         />

@@ -1,12 +1,9 @@
 'use client'
 import { Button } from '@/components/ui/button'
-import {
-  addProduct,
-  getProductDetails,
-  updateProduct
-} from '@/lib/apis/product'
+import { toast } from '@/components/ui/use-toast'
+import { getProductDetails, updateProduct } from '@/lib/apis/product'
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { FaArrowLeft } from 'react-icons/fa6'
@@ -15,6 +12,7 @@ import { FaArrowLeft } from 'react-icons/fa6'
 const AddProduct: React.FC = () => {
   const { id } = useParams()
   const { register, handleSubmit, setValue } = useForm()
+  const router = useRouter()
 
   // Form submission handler
   const onSubmit = async (data: any) => {
@@ -30,6 +28,13 @@ const AddProduct: React.FC = () => {
       const response = await updateProduct(id as string, modifiedData)
       const responseData = response?.data
       console.log(responseData)
+      if (responseData?.status == 200) {
+        toast({
+          variant: 'default',
+          title: responseData?.message
+        })
+        router.push('/product')
+      }
     } catch (error) {
       console.log(error)
     }
@@ -73,20 +78,37 @@ const AddProduct: React.FC = () => {
           {...register('productTitle')}
         />
       </div>
-      <div className='mb-4'>
-        <label
-          htmlFor='productQuantity'
-          className='block text-sm font-medium text-gray-600'>
-          Product Quantity
-        </label>
-        <input
-          required
-          type='number'
-          min={0}
-          placeholder='Write Product Quantity'
-          className='mt-1 p-2 border rounded-md w-full'
-          {...register('productQuantity')}
-        />
+      <div className='flex gap-5'>
+        <div className='mb-4 flex-1'>
+          <label
+            htmlFor='productQuantity'
+            className='block text-sm font-medium text-gray-600'>
+            Product Quantity
+          </label>
+          <input
+            required
+            type='number'
+            min={0}
+            placeholder='Write Product Quantity'
+            className='mt-1 p-2 border rounded-md w-full'
+            {...register('productQuantity')}
+          />
+        </div>
+        <div className='mb-4'>
+          <label
+            htmlFor='unit'
+            className='block text-sm font-medium text-gray-600'>
+            Unit
+          </label>
+          <input
+            required
+            type='text'
+            min={0}
+            placeholder='Quantity Unit (kg, Ltr, ...)'
+            className='mt-1 p-2 border rounded-md w-full'
+            {...register('unit')}
+          />
+        </div>
       </div>
       <div className='mb-4'>
         <label
@@ -95,10 +117,10 @@ const AddProduct: React.FC = () => {
           Product Wholesale Price
         </label>
         <input
-          required
+          // required
           type='number'
           min={0}
-          placeholder='Enter Wholesale Price'
+          placeholder='Enter Wholesale Price (optional)'
           className='mt-1 p-2 border rounded-md w-full'
           {...register('productWholesalePrice')}
         />
@@ -126,7 +148,7 @@ const AddProduct: React.FC = () => {
         </label>
         <input
           type='text'
-          placeholder='Write a note (optional)'
+          placeholder='Write a note or advise for customer (optional)'
           className='mt-1 p-2 border rounded-md w-full'
           {...register('note')}
         />

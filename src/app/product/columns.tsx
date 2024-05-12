@@ -21,6 +21,7 @@ export type Product = {
   productWholesalePrice: string
   productRetailPrice: string
   productQuantity: string
+  unit: string
 }
 
 export const columns: ColumnDef<Product>[] = [
@@ -54,6 +55,19 @@ export const columns: ColumnDef<Product>[] = [
     )
   },
   {
+    accessorKey: 'productQuantity',
+    header: 'Quantity',
+    cell: ({ row }) => {
+      const product = row.original
+      return (
+        <div className='capitalize'>
+          {product?.productQuantity} {product?.unit}
+        </div>
+      )
+    }
+  },
+
+  {
     accessorKey: 'productWholesalePrice',
     header: ({ column }) => {
       return (
@@ -71,7 +85,17 @@ export const columns: ColumnDef<Product>[] = [
   },
   {
     accessorKey: 'productRetailPrice',
-    header: () => <div className='text-right'>Retail Price</div>,
+    // header: () => <div className='text-right'>Retail Price</div>,
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Retail Price
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      )
+    },
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue('productRetailPrice'))
 
@@ -81,7 +105,7 @@ export const columns: ColumnDef<Product>[] = [
         currency: 'bdt'
       }).format(amount)
 
-      return <div className='text-right font-medium'>{formatted}</div>
+      return <div className='text font-medium'>{formatted}</div>
     }
   },
   {
@@ -106,7 +130,7 @@ export const columns: ColumnDef<Product>[] = [
                   ${product?.productTitle},
                   Whole salePrice: ${product?.productWholesalePrice},
                   Retail Price: ${product?.productRetailPrice},
-                  product Quantity: ${product?.productQuantity}
+                  product Quantity: ${product?.productQuantity} ${product?.unit}
                 `
                 navigator.clipboard.writeText(productData)
               }}>
