@@ -12,9 +12,10 @@ export type Product = {
   productRetailPrice: string
   _id: string
   productQuantity: string
+  unit: string
 }
 
-const AddProduct: React.FC = async () => {
+const AddProduct: React.FC = () => {
   // const response = await getAllProducts()
   // const totalProducts = response.data.totalCount
   // const products = response.data.allProducts
@@ -30,7 +31,7 @@ const AddProduct: React.FC = async () => {
           `https://rof-investors-server.vercel.app/product/all`
         )
         const data = await response.json()
-        console.log(data)
+        // console.log(data)
         setProducts(data?.allProducts)
         setTotalProducts(data?.totalCount)
       } catch (error) {

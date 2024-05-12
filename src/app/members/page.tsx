@@ -18,7 +18,7 @@ interface Member {
   gender: string
 }
 
-const AllMembers = async () => {
+const AllMembers = () => {
   // const response = await getAllMembers()
   // const data = response?.data?.allUsers
   // let data: Member[] = []
@@ -33,7 +33,7 @@ const AllMembers = async () => {
           await fetch(`https://rof-investors-server.vercel.app/member/all`)
         const data = await response.json()
         // const data = response?.data
-        console.log(data)
+        // console.log(data)
         setData(data?.allUsers)
         setTotalMembers(data?.totalCount)
       } catch (error) {

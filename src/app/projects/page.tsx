@@ -18,7 +18,7 @@ interface Project {
   projectDetails: string
 }
 
-const AllProjects = async () => {
+const AllProjects = () => {
   // const response = await getAllProjects()
   // const projectList = response.data?.allProject
 
@@ -32,7 +32,7 @@ const AllProjects = async () => {
           await fetch(`https://rof-investors-server.vercel.app/project/all`)
         const data = await response.json()
 
-        console.log(data)
+        // console.log(data)
         setProjectList(data?.allProject)
         setTotalProject(data?.totalCount)
       } catch (error) {

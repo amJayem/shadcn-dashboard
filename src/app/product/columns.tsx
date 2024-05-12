@@ -50,9 +50,14 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: 'productTitle',
     header: 'Product Title',
-    cell: ({ row }) => (
-      <div className='capitalize'>{row.getValue('productTitle')}</div>
-    )
+    cell: ({ row }) => {
+      const product = row.original
+      return (
+        <div className='capitalize'>
+          <Link href={`/product/${product?._id}`}>{product?.productTitle}</Link>
+        </div>
+      )
+    }
   },
   {
     accessorKey: 'productQuantity',
@@ -66,7 +71,6 @@ export const columns: ColumnDef<Product>[] = [
       )
     }
   },
-
   {
     accessorKey: 'productWholesalePrice',
     header: ({ column }) => {
@@ -85,7 +89,6 @@ export const columns: ColumnDef<Product>[] = [
   },
   {
     accessorKey: 'productRetailPrice',
-    // header: () => <div className='text-right'>Retail Price</div>,
     header: ({ column }) => {
       return (
         <Button
